@@ -1,20 +1,36 @@
--- How to reference other models
--- select * from {{ ref('stg_customers')}}
-
--- order_id, customer_id, amount
 with orders as (
-    select order_id, customer_id from {{ ref('stg_orders')}}
+
+    select
+        order_id,
+        customer_id
+    from {{ ref('stg_orders')}}
+
 ),
 
 sucess_payments as (
-    select orderid, amount from {{ ref('stg_payments')}}
+
+    select
+        orderid,
+        amount
+    from {{ ref('stg_payments')}}
+
     where status = 'success'
+
+),
+
+final as (
+
+    select
+
+        orders.order_id
+        , customer_id
+        , amount
+        
+    from orders
+
+        left join sucess_payments
+            on orders.order_id = sucess_payments.orderid
+
 )
 
-select 
-    order_id
-    , customer_id
-    , amount
-    
-from orders O
-left join sucess_payments P on O.order_id = P.orderid
+select * from final
