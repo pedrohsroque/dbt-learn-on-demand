@@ -60,5 +60,3 @@ final as (
 )
 
 select * from final
-
---select sum (lifetime_value) from final -- checking the result
